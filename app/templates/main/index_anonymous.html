@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Oxygen Cylinder Management{% endblock %}
+
+{% block content %}
+<div class="jumbotron mt-4">
+    <h1 class="display-4">Welcome to Oxygen Cylinder Management</h1>
+    <p class="lead">Manage your oxygen cylinder inventory with ease. Track creations, receptions, and deliveries all in one place.</p>
+    <hr class="my-4">
+    <p>Please log in to access the system or register for a new account if you don't have one.</p>
+    <a class="btn btn-primary btn-lg mr-2" href="{{ url_for('auth.login') }}" role="button">Login</a>
+    <a class="btn btn-success btn-lg" href="{{ url_for('auth.register') }}" role="button">Register</a>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <h4>Track Cylinders</h4>
+        <p>Keep a detailed record of every oxygen cylinder, from creation to final delivery.</p>
+    </div>
+    <div class="col-md-4">
+        <h4>Manage Status</h4>
+        <p>Update cylinder statuses (Available, Delivered, Received, Maintenance) with automatic date logging.</p>
+    </div>
+    <div class="col-md-4">
+        <h4>Generate Reports</h4>
+        <p>Access reports on cylinder creations, receptions, and deliveries to stay informed.</p>
+    </div>
+</div>
+{% endblock %}

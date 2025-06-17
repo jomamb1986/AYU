@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - Oxygen Cylinder Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ title }}</h2>
+    <p>This report shows all cylinders ordered by their creation date.</p>
+
+    {% if cylinders %}
+    <table class="table table-striped table-hover mt-3">
+        <thead>
+            <tr>
+                <th>Cylinder ID Tag</th>
+                <th>Status</th>
+                <th>Creation Date</th>
+                <th>Delivered On</th>
+                <th>Received On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cylinder in cylinders %}
+            <tr>
+                <td><a href="{{ url_for('cylinders.view_cylinder', cylinder_id=cylinder.id) }}">{{ cylinder.cylinder_id_tag }}</a></td>
+                <td>
+                    <span class="badge badge-{% if cylinder.status == 'available' %}success{% elif cylinder.status == 'delivered' %}warning{% elif cylinder.status == 'received' %}info{% elif cylinder.status == 'maintenance' %}secondary{% else %}light{% endif %}">
+                        {{ cylinder.status.replace('_', ' ') | title }}
+                    </span>
+                </td>
+                <td>{{ cylinder.creation_date.strftime('%Y-%m-%d %H:%M:%S UTC') if cylinder.creation_date else 'N/A' }}</td>
+                <td>{{ cylinder.delivery_date.strftime('%Y-%m-%d %H:%M:%S UTC') if cylinder.delivery_date else 'N/A' }}</td>
+                <td>{{ cylinder.reception_date.strftime('%Y-%m-%d %H:%M:%S UTC') if cylinder.reception_date else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <nav aria-label="Creations report pagination">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {% if not prev_url %}disabled{% endif %}">
+                <a class="page-link" href="{{ prev_url or '#' }}">Previous</a>
+            </li>
+            {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                    <li class="page-item {% if pagination.page == page_num %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('reports.cylinder_creations_report', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endfor %}
+            <li class="page-item {% if not next_url %}disabled{% endif %}">
+                <a class="page-link" href="{{ next_url or '#' }}">Next</a>
+            </li>
+        </ul>
+    </nav>
+    {% else %}
+    <div class="alert alert-info mt-3">No cylinder creation data found.</div>
+    {% endif %}
+    <a href="{{ url_for('reports.index') }}" class="btn btn-secondary mt-3">Back to Reports</a>
+</div>
+{% endblock %}
