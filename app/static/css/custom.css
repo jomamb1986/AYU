@@ -1,0 +1,88 @@
+/* Estilos personalizados para la aplicación OxyApp */
+
+/* Paleta de colores inspirada en CNS (aproximación) */
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f8f9fa; /* Blanco hueso/gris muy claro para el fondo general */
+    color: #212529; /* Color de texto principal (Bootstrap default) */
+}
+
+.navbar-dark.bg-primary {
+    /* Azul institucional principal - Ejemplo: un azul oscuro y sobrio */
+    background-color: #004085 !important; /* Azul marino oscuro, !important para asegurar precedencia */
+    border-bottom: 2px solid #003366; /* Borde inferior ligeramente más oscuro */
+}
+
+.navbar-dark .navbar-brand,
+.navbar-dark .navbar-brand:hover,
+.navbar-dark .navbar-brand:focus,
+.navbar-dark .nav-link {
+    color: #ffffff; /* Texto blanco para buen contraste en navbar oscura */
+}
+
+.navbar-dark .nav-link:hover,
+.navbar-dark .nav-link:focus {
+    color: #e9ecef; /* Un blanco ligeramente más apagado para hover */
+}
+
+.navbar-brand img {
+    max-height: 35px; /* Ajusta según el tamaño de tu logo */
+    width: auto;
+    /* margin-right: 10px; No es necesario si el logo está en su propio brand link */
+    vertical-align: middle; /* Alinear mejor con el texto si está junto */
+}
+
+.btn-primary {
+    background-color: #0056b3; /* Un azul más brillante para botones primarios */
+    border-color: #004085;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #004085; /* Oscurecer en hover/focus */
+    border-color: #00376e;
+}
+
+.btn-success {
+    background-color: #28a745; /* Verde para acciones de éxito */
+    border-color: #1e7e34;
+}
+
+.btn-info { /* Para botones informativos o secundarios */
+    background-color: #17a2b8;
+    border-color: #117a8b;
+}
+
+.footer {
+    background-color: #343a40; /* Footer oscuro */
+    color: #f8f9fa; /* Texto claro en footer */
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-top: 3px solid #004085; /* Línea superior con el azul principal */
+}
+
+.footer .text-muted { /* El span del copyright */
+    color: #adb5bd !important; /* Un gris claro para el texto muted en footer oscuro */
+}
+
+.card-header {
+    background-color: #0056b3; /* Cabeceras de tarjetas con azul más brillante */
+    color: white;
+    font-weight: bold;
+}
+
+h1, h2, h3, h4, h5, .display-4 {
+    color: #004085; /* Títulos principales con el azul oscuro de la navbar */
+}
+
+.table thead th {
+    background-color: #0056b3; /* Cabeceras de tabla con azul más brillante */
+    color: #ffffff; /* Texto blanco para cabeceras de tabla */
+}
+
+/* Jumbotron en página de bienvenida anónima */
+.jumbotron {
+    background-color: #e9ecef; /* Fondo gris claro para el jumbotron */
+    color: #212529;
+    border: 1px solid #dee2e6;
+}
