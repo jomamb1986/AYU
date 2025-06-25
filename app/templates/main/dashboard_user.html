@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Oxygen Cylinder Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Bienvenido, {{ current_user.username }}!</h2>
+    <p>Este es tu dashboard. Desde aquí puede acceder rápidamente a las funciones clave de la aplicación.</p>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Control de Cilindros</h5>
+                    <p class="card-text">Ver la lista de Cilindros, crear nuevos o actualizar sus estados.</p>
+                    <a href="{{ url_for('cylinders.index') }}" class="btn btn-primary">Ir a Cilindros</a>
+                    <a href="{{ url_for('cylinders.create_cylinder') }}" class="btn btn-success ml-2">Crear Nuevo</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Ver Reportes</h5>
+                    <p class="card-text">Accesoa reportes de creacion de Cilindros, envio y recepcion.</p>
+                    <a href="{{ url_for('reports.index') }}" class="btn btn-info">Ir a Reportes</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Tu Perfil</h5>
+                    <p class="card-text">Ver o Actualizar tu perfil de información (¡Próximamente habrá una función especial!).</p>
+                    <button class="btn btn-secondary" disabled>Profile</button> {# Placeholder #}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# We could add more specific info here, like "Your recently updated cylinders" or some stats #}
+</div>
+{% endblock %}
