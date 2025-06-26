@@ -1,0 +1,38 @@
+{# <!-- app/templates/admin/edit_user_role.html CORREGIDO POR JULES (Versión Definitiva para copiar) --> #}
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
+{% block title %}Editar Rol para {{ user.username }} - Panel de Administrador{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Editar Rol para el Usuario: <strong>{{ user.username }}</strong></h2>
+    <p>ID de Usuario: {{ user.id }}<br>
+       Correo Electrónico: {{ user.email }}<br>
+       Rol Actual: <strong>{{ user.role | title }}</strong>
+    </p>
+    <hr>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <form method="POST" action="{{ url_for('admin.edit_user_role', user_id=user.id) }}">
+                {{ form.hidden_tag() }}
+                
+                <div class="form-group">
+                    {{ form.role.label(class="form-control-label") }}
+                    {{ form.role(class="form-control" + (" is-invalid" if form.role.errors else "")) }}
+                    {% if form.role.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.role.errors %}<span>{{ error }}</span>{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group mt-4">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('admin.manage_users') }}" class="btn btn-secondary ml-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{# <!-- este es el codigo para cylinders/process_batch_form.html proporcionado por Jules PARTE 1 --> #}
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %} {# Asumiendo que tiene este archivo para renderizar formularios #}
+
+{% block title %}{{ title }}{% endblock %} {# El título se pasa desde la ruta, ej. "Registrar Entrega de Lote..." #}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ title }}</h2>
+    <hr>
+
+    {% if cylinders_selected %}
+        <p><strong>Va a procesar una {{ action_type_display | lower }} para los siguientes IDs de botellones:</strong></p>
+        <div class="list-group mb-3" style="max-height: 200px; overflow-y: auto;">
+        {% for cylinder in cylinders_selected %}
+                <a class="list-group-item list-group-item-action list-group-item-light p-2">
+                    ID: <strong>{{ cylinder.cylinder_id_tag }}</strong> (Estado actual: 
+                    {% if cylinder.status == 'available' %}Disponible
+                    {% elif cylinder.status == 'delivered' %}Entregado
+                    {% elif cylinder.status == 'received' %}Recibido
+                    {% elif cylinder.status == 'maintenance' %}Mantenimiento
+                    {% elif cylinder.status == 'created' %}Creado
+                    {% else %}{{ cylinder.status | title }}
+                    {% endif %})
+                </a>
+            {% endfor %}
+        </div> {# Cierre del div.list-group #}
+        <hr>
+    {% else %}
+        <p class="text-danger">No se han especificado botellones para procesar. Por favor, <a href="{{ url_for('cylinders.index') }}">vuelva a la lista</a> y seleccione al menos uno.</p>
+        <p><em>El formulario de procesamiento ha sido deshabilitado.</em></p>
+    {% endif %}
+
+    {% if cylinders_selected %} {# Solo mostrar el formulario si hay cilindros seleccionados #}
+    <p>Por favor, ingrese los detalles que se aplicarán a todos los botellones seleccionados en este lote:</p>
+
+    <form method="POST" action="{{ url_for('cylinders.execute_batch_action') }}">
+        {{ form.hidden_tag() }} {# Importante para CSRF y campos ocultos #}
+         {# Campo Nombre de Contraparte #}
+        <div class="form-group">
+            {{ form.nombre_contraparte.label(class="form-control-label") }} {# La etiqueta se actualiza dinámicamente en la ruta #}
+            {{ form.nombre_contraparte(class="form-control" + (" is-invalid" if form.nombre_contraparte.errors else ""), placeholder="Ej: Hospital General / Juan Pérez") }}
+            {% if form.nombre_contraparte.errors %}
+                <div class="invalid-feedback">
+                    {% for error in form.nombre_contraparte.errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        {# Campo Nota Adicional #}
+        <div class="form-group">
+            {{ form.nota_movimiento.label(class="form-control-label") }}
+            {{ form.nota_movimiento(class="form-control" + (" is-invalid" if form.nota_movimiento.errors else ""), rows=4, placeholder="Ej: Entrega para sala de emergencias / Recepción de botellones vacíos para recarga") }}
+            {% if form.nota_movimiento.errors %}
+                <div class="invalid-feedback">
+                    {% for error in form.nota_movimiento.errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group mt-4">
+        {# El texto del botón de envío también se actualiza dinámicamente en la ruta #}
+            {{ form.submit(class="btn btn-primary btn-lg") }} 
+            <a href="{{ url_for('cylinders.index') }}" class="btn btn-secondary btn-lg ml-2">Cancelar y Volver a la Lista</a>
+        </div>
+    </form>
+    {% endif %} {# Fin del if cylinders_selected #}
+
+</div> {# Fin del div.container.mt-4 #}
+{% endblock %}
