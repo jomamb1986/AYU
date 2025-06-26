@@ -1,0 +1,39 @@
+
+/**/*/*/*/*/*/*/*/*/*/*/*/
+*/
+*/         PROCEDIMIENTO PARA HACER CORRER LA APP
+*/
+*/*/*/*/*/*/**/*/*/*/*//*
+
+
+1.- INGRESAR A LA CARPETA DEL PROYECTO DESDE LA TERMINAL
+
+2.- INSTALAMOS LOS REQURIMIENTOS Y DEPENDENCIAS
+
+      pip install -r requirements.txt
+      pip install email-validator
+      
+3.- CREAMOS EL ENTORNO VIRTUAL
+
+	(Opcional pero recomendado si hay problemas) Elimine la carpeta venv vieja: rm -rf venv (¡con cuidado!).
+	Cree uno nuevo: python -m venv venv.
+	Actívelo: source venv/bin/activate.
+	(SI EN ALGUN MONETO QUIERE DESACTIVAR EL ENTORNO VIRTUAL desactívelo con deactivate.
+	
+4.- REINSTALAMOS LOS REQURIMIENTOS Y DEPENDENCIAS
+
+      pip install -r requirements.txt
+      pip install email-validator
+      pip install PyJWT	
+      
+5.- CREACION DELA BASE DE DATOS
+
+		(Opcional, con cuidado si tiene datos) En su terminal, desde la carpeta del proyecto borre app.db y la carpeta migrations.
+		Active el entorno virtual.
+		Ejecute: flask db init (Esto crea la carpeta migrations si no existe).
+		Ejecute: flask db migrate -m "Creacion inicial completa de la base de datos" (Esto genera el script para todas sus tablas con la estructura más reciente).
+		Ejecute: flask db upgrade (Esto crea el archivo app.db con todas las tablas).   
+		
+6.- EJECUTAR LA APP
+
+	python3 run.py	   

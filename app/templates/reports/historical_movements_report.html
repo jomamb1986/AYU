@@ -1,0 +1,119 @@
+{# <!-- este es el codigo para reports/historical_movements_report.html proporcionado por Jules --> #}
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="printable-area">
+        <h2>{{ title }}</h2>
+        <p class="report-description">Este reporte muestra todos los movimientos de entrega y recepción de botellones. Utilice los filtros de fecha para refinar los resultados.</p>
+
+        <form method="POST" action="{{ url_for('reports.historical_movements_report') }}" class="mb-4 p-3 border rounded bg-light no-print">
+            {{ form.hidden_tag() }}
+            <div class="form-row align-items-end">
+                <div class="col-md-4">
+                    {{ form.fecha_inicio.label(class="form-control-label") }}
+                    {{ form.fecha_inicio(class="form-control form-control-sm" + (" is-invalid" if form.fecha_inicio.errors else "")) }}
+                    {% if form.fecha_inicio.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.fecha_inicio.errors %}<span>{{ error }}</span>{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    {{ form.fecha_fin.label(class="form-control-label") }}
+                    {{ form.fecha_fin(class="form-control form-control-sm" + (" is-invalid" if form.fecha_fin.errors else "")) }}
+                    {% if form.fecha_fin.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.fecha_fin.errors %}<span>{{ error }}</span>{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-auto">
+                    {{ form.submit_filter(class="btn btn-primary btn-sm") }}
+                    {% if current_fecha_inicio or current_fecha_fin %}
+                        <a href="{{ url_for('reports.historical_movements_report') }}" class="btn btn-secondary btn-sm ml-2">Limpiar Filtro</a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+
+        {% if movimientos %}
+        <table class="table table-sm table-striped table-hover mt-3">
+            <thead>
+                <tr>
+                    <th>Fecha Movimiento</th>
+                    <th>ID Botellón</th>
+                    <th>Tipo Movimiento</th>
+                    <th>Usuario Registra</th>
+                    <th>Entregado a / Recibido de</th>
+                    <th>Nota</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for movimiento in movimientos %}
+                <tr>
+                    <td>{{ movimiento.fecha_movimiento.strftime('%Y-%m-%d %H:%M:%S') if movimiento.fecha_movimiento else 'N/A' }}</td>
+                    <td>
+                        {% if movimiento.cilindro %}
+                        <a href="{{ url_for('cylinders.view_cylinder', cylinder_id=movimiento.cilindro.id) }}">{{ movimiento.cilindro.cylinder_id_tag }}</a>
+                        {% else %}
+                        N/A (Botellón eliminado)
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if movimiento.tipo_movimiento == 'creacion' %}Creación
+                        {% elif movimiento.tipo_movimiento == 'entrega' %}Entrega
+                        {% elif movimiento.tipo_movimiento == 'recepcion' %}Recepción
+                        {% else %}{{ movimiento.tipo_movimiento | title }}
+                        {% endif %}
+                    </td>
+                    <td>{{ movimiento.usuario.username if movimiento.usuario else 'N/A' }}</td>
+                    <td>{{ movimiento.nombre_contraparte or '--' }}</td>
+                    <td>{{ movimiento.nota or '--' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="alert alert-info mt-3">
+            No se encontraron movimientos para el rango de fechas seleccionado o no hay movimientos registrados.
+        </div>
+        {% endif %}
+    </div>
+
+    {% if pagination and pagination.pages > 1 %}
+    <div class="no-print">
+        <nav aria-label="Historial de Movimientos Paginación">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if not prev_url %}disabled{% endif %}">
+                    <a class="page-link" href="{{ prev_url or '#' }}">Anterior</a>
+                </li>
+                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        {% if pagination.page == page_num %}
+                        <li class="page-item active" aria-current="page"><span class="page-link">{{ page_num }}</span></li>
+                        {% else %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('reports.historical_movements_report', fecha_inicio=current_fecha_inicio, fecha_fin=current_fecha_fin, page=page_num) }}">{{ page_num }}</a></li>
+                        {% endif %}
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+                <li class="page-item {% if not next_url %}disabled{% endif %}">
+                    <a class="page-link" href="{{ next_url or '#' }}">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+    <div class="mt-3 no-print">
+        <button onclick="window.print();" class="btn btn-info mr-2">Imprimir Reporte</button>
+        <a href="{{ url_for('reports.export_historical_movements_csv', fecha_inicio=current_fecha_inicio, fecha_fin=current_fecha_fin) }}" class="btn btn-success mr-2">Exportar a Excel (CSV)</a>
+        <a href="{{ url_for('reports.index') }}" class="btn btn-secondary">Volver a Reportes</a>
+    </div>
+</div>
+{% endblock %}
